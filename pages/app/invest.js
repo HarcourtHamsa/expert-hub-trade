@@ -23,7 +23,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import DashboardWrapper from "../../components/app/DashboardWrapper";
 import Statistics from "../../components/app/Statistics";
 import FloatingButton from "../../components/FloatingButton";
-
+import { useRouter } from "next/router";
 import { TickerTape } from "react-ts-tradingview-widgets";
 import WithAuth from "../../HOCs/WithAuth";
 
@@ -35,6 +35,8 @@ const InvestmentPlanCard = ({
   duration,
   minimumReturn,
 }) => {
+  const router = useRouter();
+
   return (
     <Stat
       px={{ base: 2, md: 4 }}
@@ -79,6 +81,17 @@ const InvestmentPlanCard = ({
         </List>
         <Box w="80%" pt={7}>
           <Button
+          onClick={() => {
+            router.push(
+              {
+                pathname: "/app/payment",
+                query: {
+                  amount: minimumAmount,
+                },
+              },
+              "/app/payment"
+            );
+          }}
             w="full"
             colorScheme="blue"
             variant="solid"

@@ -24,7 +24,7 @@ h2 {
 * {
   box-sizing: border-box;
   font-family: "Uber";
-  font-weight: bold !important;
+  /* font-weight: bold !important; */
 }
 
 #hero {

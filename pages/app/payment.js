@@ -34,28 +34,28 @@ const CRYPRO_PAYMENT_DETAILS = [
   {
     id: 1,
     name: "Bitcoin",
-    address: "3Qnoo6xxHnDww8BRmYWahvqeX39c3rSYH6",
+    address: "1PRRXSt1N63CMh3qWoqKcbf9JAHucmTG2J",
     icon: <Icon as={FaBitcoin} w={16} h={16} color="goldenrod" />,
   },
 
   {
     id: 2,
     name: "Ethereum (ERC20)",
-    address: "0x1ff3b52f6A9Ab0FD7748b1196c11375D96793B08",
+    address: "0x2a6F9751ed8d478277F569b8d6bc591F9E88Ae6e",
     icon: <Icon as={FaEthereum} w={16} h={16} color="black" />,
   },
 
   {
     id: 3,
     name: " USDT (TRC20)",
-    address: "TK7xjV6xkuQgXRov7TXPWshEQJvQRTM8bd",
+    address: "0x2a6F9751ed8d478277F569b8d6bc591F9E88Ae6e",
     icon: <Image src={usdt} w={10} h={10} color="white" alt="" />,
   },
 
   {
     id: 4,
     name: "Shiba inu",
-    address: "0xFCA45A717cDFdc139e823a7ee520161E80948fF9",
+    address: "0x2a6F9751ed8d478277F569b8d6bc591F9E88Ae6e",
     icon: <Image src={shiba} w={10} h={10} color="white" alt="" />,
   },
 ];
