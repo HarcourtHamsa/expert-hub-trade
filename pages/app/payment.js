@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import Head from "next/head";
+import { createClient } from "next-sanity";
 import DashboardWrapper from "../../components/app/DashboardWrapper";
 import FloatingButton from "../../components/FloatingButton";
 import {
@@ -30,35 +31,48 @@ import { useFormik } from "formik";
 import helpers from "../../helpers";
 import axios from "axios";
 
-const CRYPRO_PAYMENT_DETAILS = [
-  {
-    id: 1,
-    name: "Bitcoin",
-    address: "1PRRXSt1N63CMh3qWoqKcbf9JAHucmTG2J",
-    icon: <Icon as={FaBitcoin} w={16} h={16} color="goldenrod" />,
-  },
+const client = createClient({
+  projectId: "jxu2d129",
+  dataset: "production",
+  useCdn: false,
+  apiVersion: "2022-07-17",
+  token: process.env.SANITY_ACCESS_TOKEN,
+});
 
-  {
-    id: 2,
-    name: "Ethereum (ERC20)",
-    address: "0x2a6F9751ed8d478277F569b8d6bc591F9E88Ae6e",
-    icon: <Icon as={FaEthereum} w={16} h={16} color="black" />,
-  },
+const bitcoinIcon = <Icon as={FaBitcoin} w={16} h={16} color="goldenrod" />;
+const ethereumIcon = <Icon as={FaEthereum} w={16} h={16} color="black" />;
+const usdtIcon = <Image src={usdt} w={10} h={10} color="white" alt="" />;
+const shibaIcon = <Image src={shiba} w={10} h={10} color="white" alt="" />;
 
-  {
-    id: 3,
-    name: " USDT (TRC20)",
-    address: "0x2a6F9751ed8d478277F569b8d6bc591F9E88Ae6e",
-    icon: <Image src={usdt} w={10} h={10} color="white" alt="" />,
-  },
+// const CRYPRO_PAYMENT_DETAILS = [
+//   {
+//     id: 1,
+//     name: "Bitcoin",
+//     address: "1PRRXSt1N63CMh3qWoqKcbf9JAHucmTG2J",
+//     icon: <Icon as={FaBitcoin} w={16} h={16} color="goldenrod" />,
+//   },
 
-  {
-    id: 4,
-    name: "Shiba inu",
-    address: "0x2a6F9751ed8d478277F569b8d6bc591F9E88Ae6e",
-    icon: <Image src={shiba} w={10} h={10} color="white" alt="" />,
-  },
-];
+//   {
+//     id: 2,
+//     name: "Ethereum (ERC20)",
+//     address: "0x2a6F9751ed8d478277F569b8d6bc591F9E88Ae6e",
+//     icon: <Icon as={FaEthereum} w={16} h={16} color="black" />,
+//   },
+
+//   {
+//     id: 3,
+//     name: " USDT (TRC20)",
+//     address: "0x2a6F9751ed8d478277F569b8d6bc591F9E88Ae6e",
+//     icon: <Image src={usdt} w={10} h={10} color="white" alt="" />,
+//   },
+
+//   {
+//     id: 4,
+//     name: "Shiba inu",
+//     address: "0x2a6F9751ed8d478277F569b8d6bc591F9E88Ae6e",
+//     icon: <Image src={shiba} w={10} h={10} color="white" alt="" />,
+//   },
+// ];
 
 const Card = ({ title, text, icon, notify }) => {
   return (
@@ -99,7 +113,7 @@ const Card = ({ title, text, icon, notify }) => {
   );
 };
 
-function Payment() {
+function Payment({ wallet }) {
   const { query } = useRouter();
   const [cloudinaryUrl, setCloudinaryUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -214,13 +228,23 @@ function Payment() {
           Always verify and confirm you copied the wallet address correctly.
         </p> */}
         <SimpleGrid columns={{ base: 2, md: 4 }} spacing={6} mt={6}>
-          {CRYPRO_PAYMENT_DETAILS.map((crypto) => {
+          {wallet.map((v) => {
             return (
               <Card
-                key={crypto.id}
-                icon={crypto.icon}
-                title={crypto.name}
-                text={crypto.address}
+                key={v._id}
+                icon={
+                  v.cryptocurrency === "Bitcoin"
+                    ? bitcoinIcon
+                    : v.cryptocurrency === "Ethereum"
+                    ? ethereumIcon
+                    : v.cryptocurrency === "Shiba Inu"
+                    ? shibaIcon
+                    : v.cryptocurrency === "USDT (TRC20)"
+                    ? usdtIcon
+                    : null
+                }
+                title={v.cryptocurrency}
+                text={v.address}
                 notify={notify}
               />
             );
@@ -315,3 +339,13 @@ function Payment() {
 }
 
 export default WithAuth(Payment);
+
+export async function getStaticProps() {
+  const wallet = await client.fetch(`*[_type == "wallet"]`);
+
+  return {
+    props: {
+      wallet,
+    },
+  };
+}
